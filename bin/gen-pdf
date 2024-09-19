@@ -72,6 +72,11 @@ EVENT_TYPE = {
       URL:      "https\://b-cubed.eu/b-cubed-hackathon",
       location: "Brussels, Belgium, 2024"
   },
+  "BH24JP": {
+      title:    "DBCLS BioHackathon 2024",
+      URL:      "https\://2024.biohackathon.org/",
+      location: "Fukushima, Japan, 2024"
+  },
   "SWAT4HCLS24": {
       title:    "SWAT4HCLS 2024",
       URL:      "https\://www.swat4ls.org/workshops/leiden2024/",
