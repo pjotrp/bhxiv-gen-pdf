@@ -10,7 +10,8 @@ RUN apt update -y && apt install -y \
     librsvg2-bin=2.50.3+dfsg-1+deb11u1 \
     texlive-bibtex-extra=2020.20210202-3 \
     texlive-latex-base=2020.20210202-3 \
-    texlive-latex-extra=2020.20210202-3
+    texlive-latex-extra=2020.20210202-3 \
+    texlive-fonts-extra=2020.20210202-3
 
 ADD ./bin /gen-pdf/bin
 ADD ./lib /gen-pdf/lib

@@ -21,6 +21,7 @@
 \usepackage{lmodern}
 \usepackage{colortbl}
 \usepackage{tabularx}
+\usepackage{fontawesome5}
 
 \usepackage{float}
 \let\origfigure\figure
@@ -366,6 +367,7 @@ $if(dir)$
   \newenvironment{LTR}{\beginL}{\endL}
 \fi
 $endif$
+
 $for(header-includes)$
 $header-includes$
 $endfor$
@@ -378,12 +380,17 @@ $if(subtitle)$
 \subtitle{$subtitle$}
 $endif$
 
+% ORCID support
+
+\definecolor{orcidlogocol}{HTML}{A6CE39}
+\newcommand{\orcidlink}[1]{\protect\href{https://orcid.org/#1}{\small\textcolor{orcidlogocol}{\faOrcid}}}
+
 $if(authors)$
   $for(authors)$
   $if(authors.affiliation)$
-    \author[$authors.affiliation$]{$authors.name$}
+    \author[$authors.affiliation$]{$authors.name$$if(authors.orcid)$\orcidlink{$authors.orcid$}$endif$}
   $else$
-    \author{$authors.name$}
+    \author{$authors.name$$if(authors.orcid)$\orcidlink{$authors.orcid$}$endif$}
   $endif$
   $endfor$
 $endif$
