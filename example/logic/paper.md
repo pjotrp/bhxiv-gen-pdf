@@ -5,24 +5,29 @@ tags:
   - logic programming
 authors:
   - name: Chris Mungall
-    orcid: 0000-0002-8021-9162
+    orcid: 0000-0002-6601-2165
     affiliation: 1
   - name: Hirokazu Chiba
     affiliation: 2
+    orcid: 0000-0003-4062-8903
   - name: Shuichi Kawashima
     affiliation: 2
+    orcid: 0000-0001-7883-3756
   - name: Yasunori Yamamoto
     affiliation: 2
+    orcid: 0000-0002-6943-6887
   - name: Pjotr Prins
     orcid: 0000-0002-8021-9162
     affiliation: 3
   - name: Nada Amin
     affiliation: 4
+    orcid: 0000-0002-0830-7248
   - name: Deepak Unni
     affiliation: 5
     orcid: 0000-0002-3583-7340
   - name: <nobr>William&nbsp;E.&nbsp;Byrd</nobr>
     affiliation: 6
+    orcid: 0000-0003-4730-5293
 affiliations:
   - name: Environmental Genomics and Systems Biology, Lawrence Berkeley National Laboratory, Berkeley, CA, USA
     index: 1
