@@ -32,7 +32,7 @@ Notes:
 2. One repo can not contain multiple paper.md's. It will pick the first one it finds.
 3. For biohackathons it pays to add a template repo people can template from, e.g
 
-=> https://github.com/biohackrxiv/bhxiv-gen-pdf-template
+=> https://github.com/biohackrxiv/publication-template
 
 # Introduction
 
