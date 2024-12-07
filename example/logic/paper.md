@@ -37,6 +37,7 @@ affiliations:
     index: 3
   - name: Harvard University, USA
     index: 4
+    ror: 03vek6s52
   - name: Berkeley Lab, USA
     index: 5
   - name: University of Alabama at Birmingham, USA
