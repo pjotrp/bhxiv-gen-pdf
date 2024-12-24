@@ -92,6 +92,29 @@ If you are not using Docker or Guix you may need to explicitely add ruby
 
     ruby bin/gen-pdf [dir]
 
-## Run tests
+## First, run tests
 
     ruby -I lib test/test_generator.rb
+
+## Next generate default example
+
+    ruby ./bin/gen-pdf --debug ./example/logic Japan2019
+
+## Next try your document using path
+
+Clone your repo in to a visible path and
+
+    ruby ./bin/gen-pdf --debug my-repo-path/paper Japan2019
+
+That should generate a PDF. To generate the latex file try
+
+    ruby ./bin/gen-pdf --debug my-repo-path/paper Japan2019 output.tex
+
+and now you can debug the generated latex:
+
+    lualatex output.tex
+    biber output.tex
+
+in this case we found
+
+    INFO - Found 0 citekeys in bib section 0
