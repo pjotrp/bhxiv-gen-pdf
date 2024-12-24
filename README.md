@@ -83,8 +83,8 @@ Note that the current working directory of host machine is mounted on `/work` in
 
 # Run via GNU Guix
 
-The [guix-deploy](./.guix-deploy) starts a Guix container which allows running
-the generator and tests.
+The [guix-deploy](./.guix-deploy) script starts a Guix container which allows running
+the generator and tests. The instructions are in the header of that script.
 
 # Trouble shooting
 

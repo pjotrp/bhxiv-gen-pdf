@@ -1,18 +1,11 @@
-# Set up GNU Guix environment to run the command line tooling
-#
-# set path with something like 
-#
-#   export PATH=~/opt/guix/bin:$PATH
-#
-# and
+# Sets up reproducible GNU Guix shell to run the command line
+# tooling. Typically run a recent version of guix with package
+# definitions and run source ./.guix-deploy note that if guix starts
+# building a lot of stuff you are running an old version, or subsitute
+# link is not correct.
+
 
 echo Test with:
-echo ruby ./bin/gen-pdf --debug ./example/logic Japan2019 
+echo ruby ./bin/gen-pdf --debug ./example/logic Japan2019
 
-guix environment -C guix --network --ad-hoc texlive ghc-pandoc ghc-citeproc ghc-pandoc-types librsvg ruby nss-certs openssl curl git less vim 
-
-# Test with
-#
-#   ruby ./bin/gen-pdf --debug ./example/logic Japan2019 output.tex
-#
-
+guix shell -C -N -F texlive ghc-pandoc ghc-citeproc ghc-pandoc-types librsvg ruby nss-certs openssl curl git less vim ruby-minitest
