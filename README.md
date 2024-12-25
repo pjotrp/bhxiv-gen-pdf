@@ -117,6 +117,16 @@ Note that the current working directory of host machine is mounted on `/work` in
 The [guix-deploy](./.guix-deploy) script starts a Guix container which allows running
 the generator and tests. The instructions are in the header of that script.
 
+# Bibliography hints
+
+pandoc generates the bibliography (not biber or bibtex!).
+You can inspect the intermediate .tex format (see below).
+
+Importantly:
+
+* Don't put references in literal markdown, such as surrounded by `backticks`!
+* Don't use a colon in the reference ID because that has a special meaning in CITO
+
 # Trouble shooting
 
 If you are not using Docker or Guix you may need to explicitely add ruby
