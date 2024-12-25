@@ -1,9 +1,38 @@
 # Generate PDF for BioHackrXiv.org
 
 We use pandoc with LaTeX templates to generate the PDF from markdown
-that can be submitted to https://biohackrxiv.org/. Note we also have plans for
-an online tool that can do same from
-http://biohackrxiv.genenetwork.org/.
+that can be submitted to https://biohackrxiv.org/. Note we also have
+an online tool that can do same http://preview.biohackrxiv.org/.
+
+# Quick start
+
+BioHackrXiv use [pandoc flavored markdown](https://pandoc.org/MANUAL.html#pandocs-markdown). It is very simple. See
+
+=> https://github.com/biohackrxiv/bhxiv-gen-pdf/blob/master/example/logic/paper.md
+
+and the raw text version
+
+=> https://raw.githubusercontent.com/biohackrxiv/bhxiv-gen-pdf/master/example/logic/paper.md
+
+It *can* embed LaTeX because pandoc generates LaTeX from markdown as an intermediate step towards generating the final PDF.
+
+The easiest start is to take the files in ./example/doc and modify them. Don't change the file names as they are used to generate the final paper. In fact, you can copy these files into your own git repo and continue from there.
+
+We have a web interface that allows you to generate the PDF at
+
+=> http://preview.biohackrxiv.org/
+
+Paste in the base URL for your repo and the tool will find the paper.md.
+
+Notes:
+
+1. Do not paste the path to the paper itself - only the base repo URL.
+2. One repo can not contain multiple paper.md's. It will pick the first one it finds.
+3. For biohackathons it pays to add a template repo people can template from, e.g
+
+=> https://github.com/biohackrxiv/publication-template
+
+# Introduction
 
 
 # Quick start
@@ -50,6 +79,8 @@ If you find any bugs, please propose improvements via PRs. Thanks!
 - biblatex
 
 Confirmed versions of the library can be found in [Dockerfile](https://github.com/biohackrxiv/bhxiv-gen-pdf/blob/master/docker/Dockerfile)
+
+See also the Guix [script](.guix-deploy) for current dependencies.
 
 # Install
 
@@ -106,6 +137,9 @@ Clone your repo in to a visible path and
 
     ruby ./bin/gen-pdf --debug my-repo-path/paper Japan2019
 
+If you get pandoc errors, such as `Unknown option --citeproc` you'll need a plugin.
+Try the Guix container described above.
+
 That should generate a PDF. To generate the latex file try
 
     ruby ./bin/gen-pdf --debug my-repo-path/paper Japan2019 output.tex
@@ -113,8 +147,14 @@ That should generate a PDF. To generate the latex file try
 and now you can debug the generated latex:
 
     lualatex output.tex
-    biber output.tex
+    biber output.tex # note that biber or bibtex won't work!
 
-in this case we found
+we find
 
     INFO - Found 0 citekeys in bib section 0
+
+this is because the references are generated directly inline by pandoc. To test the bib file you can try
+
+    pandoc-citeproc --bib2json paper.bib
+
+and you can check the JSON records.
