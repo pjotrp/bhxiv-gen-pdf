@@ -22,6 +22,7 @@
 \usepackage{colortbl}
 \usepackage{tabularx}
 \usepackage{fontawesome5}
+% \usepackage{textpos}
 
 \usepackage{float}
 \let\origfigure\figure
@@ -83,6 +84,7 @@
 % --- Page layout -------------------------------------------------------------
 \usepackage[top=3.5cm, bottom=3cm, right=1.5cm, left=1.0cm,
             headheight=2.2cm, reversemp, includemp, marginparwidth=4.5cm]{geometry}
+% \renewcommand{\marginnotevadjust}{-2in}
 
 % --- Default font ------------------------------------------------------------
 \renewcommand\familydefault{\sfdefault}
@@ -423,21 +425,16 @@ $endif$
 \date{\vspace{-7ex}}
 
 \begin{document}
+
+
 $if(title)$
 \maketitle
 $endif$
-$if(abstract)$
-\begin{abstract}
-$abstract$
-\end{abstract}
-$endif$
 
-\marginpar{
+\marginnote{
 
-  \begin{flushleft}
-  %\hrule
-  \sffamily\small
-
+   \begin{flushleft}
+   \sffamily\small
 
   {\bfseries BioHackathon series:} \\
   \href{$event_url$}{\color{linky}{$event_title$}} \\
@@ -471,9 +468,20 @@ $endif$
 
   Published by
   \href{http://biohackrxiv.org/}{\color{linky}{BioHackrXiv.org}}
+  % \par\vspace*{\fill}
 
   \end{flushleft}
-}
+  \sffamily\small
+
+}[-1.5in]
+
+
+$if(abstract)$
+\begin{abstract}
+$abstract$
+\end{abstract}
+$endif$
+
 
 $for(include-before)$
 $include-before$
