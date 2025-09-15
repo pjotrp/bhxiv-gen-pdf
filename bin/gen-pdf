@@ -2,10 +2,10 @@
 #
 # Generate a PDF from markdown input (paper.md) in dir
 #
-# Usage:   gen-pdf [--debug] dir [event] [paper.pdf] [git-url]
+# Usage:   gen-pdf [--debug] dir [paper.pdf] [git-url]
 #
-# Example: ./bin/gen-pdf ./example/logic Japan2019 output.pdf
-#          ./bin/gen-pdf --debug ./example/logic Japan2019 output.tex
+# Example: ./bin/gen-pdf ./example/logic output.pdf
+#          ./bin/gen-pdf --debug ./example/logic output.tex
 #
 # Note that combining --debug with PDF output may lead to an error. See
 # https://github.com/jgm/pandoc/issues/5997
@@ -30,12 +30,6 @@ end
 dir="." if not dir
 print "Scanning directory \"#{dir}\" for paper source\n"
 
-bioh=ARGV.shift
-if not bioh
-  bioh= "Covid2020" # default
-end
-event = bioh.to_sym
-
 outfn=ARGV.shift
 outfn="paper.pdf" if not outfn
 
@@ -50,7 +44,7 @@ papermd = dir + "/" + "paper.md"
 raise "Can not find markdown file #{papermd}" if not File.exist?(papermd)
 
 header = md_parser(papermd)
-meta = meta_expand(header,event)
+meta = meta_expand(header)
 md_meta_checker(meta)
 
 paperbib = dir + "/" + "paper.bib"
@@ -62,114 +56,12 @@ end
 rootdir=File.expand_path(File.dirname(File.dirname(__FILE__)))
 resources=rootdir + "/resources/biohackrxiv"
 
-# EVENT_TYPE expands the metadata used for generating the PDF. A special
-# type is "Other" which is expanded using the metadata from the document
-# itself, see metadata.rb
-
-EVENT_TYPE = {
-  "SWAT4HCLS25": {
-      title:    "SWAT4HCLS 2025",
-      URL:      "https\://www.swat4ls.org/workshops/barcelona2025/",
-      location: "Barcelona, Spain, 2025"
-  },
-  "BH24EU": {
-      title:    "BioHackathon Europe 2024",
-      URL:      "https\://www.biohackathon-europe.org/",
-      location: "Barcelona, Spain, 2024"
-  },
-  "B3EU24": {
-      title:    "B-Cubed Hackathon 2024",
-      URL:      "https\://b-cubed.eu/b-cubed-hackathon",
-      location: "Brussels, Belgium, 2024"
-  },
-  "BH24JP": {
-      title:    "DBCLS BioHackathon 2024",
-      URL:      "https\://2024.biohackathon.org/",
-      location: "Fukushima, Japan, 2024"
-  },
-  "SWAT4HCLS24": {
-      title:    "SWAT4HCLS 2024",
-      URL:      "https\://www.swat4ls.org/workshops/leiden2024/",
-      location: "Leiden, The Netherlands, 2024"
-  },
-  "BLAH8": {
-      title:    "Biomedical Linked Annotation Hackathon 8",
-      URL:      "https\://blah8.linkedannotation.org/",
-      location: "Chiba, Japan, 2024"
-  },
-  "BH23EU": {
-      title:    "BioHackathon Europe 2023",
-      URL:      "https\://www.biohackathon-europe.org/",
-      location: "Barcelona, Spain, 2023"
-  },
-  "BH23JP": {
-    title:    "DBCLS BioHackathon 2023",
-    URL:      "https\://2023.biohackathon.org/",
-    location: "Kagawa, Japan, 2023"
-  },
-  "SWAT4HCLS23": {
-    title:    "SWAT4HCLS 2023",
-    URL:      "https\://www.swat4ls.org/workshops/basel2023/",
-    location: "Basel, Switzerland, 2023"
-  },
-  "BH23MENA": {
-    title:    "BioHackathon MENA 2023",
-    URL:      "https\://cbrcconferences.kaust.edu.sa/bio-hackathon-2023",
-    location: "KAUST, Saudi Arabia, 2023"
-  },
-  "BH22EU": {
-    title:    "BioHackathon Europe 2022",
-    URL:      "https\://www.biohackathon-europe.org/",
-    location: "Paris, France, 2022"
-  },
-  "BH21EU": {
-    title:    "BioHackathon Europe 2021",
-    URL:      "https\://www.biohackathon-europe.org/",
-    location: "Barcelona, Spain, 2021"
-  },
-  "BH20EU": {
-    title:    "BioHackathon Europe 2020",
-    URL:      "https\://www.biohackathon-europe.org/",
-    location: "Virtual conference 2020"
-  },
-  "BCC2020": {
-    title:    "Bioinformatics Community Conference 2020 CollaborationFest (CoFest)",
-    URL:      "https\://bcc2020.github.io/cofest/",
-    location: "Virtual conference 2020"
-  },
-  "Covid2020": {
-    title:    "COVID-19 BioHackathon",
-    URL:      "https\://github.com/virtual-biohackathons/covid-19-bh20",
-    location: "Virtual conference 2020"
-  },
-  "France2019": {
-    title:    "BioHackathon EUROPE",
-    URL:      "https\://www.biohackathon-europe.org//",
-    location: "Paris, France, 2019"
-  },
-  "Japan2019": {
-    title:    "NBDC/DBCLS BioHackathon",
-    URL:      "http\://2019.biohackathon.org/",
-    location: "Fukuoka, Japan, 2019"
-  },
-  "Japan2018": {
-    title:    "NBDC/DBCLS BioHackathon",
-    URL:      "http\://2018.biohackathon.org/",
-    location: "Matsue, Japan, 2018"
-  },
-  "Other": nil # reserved. See metadata.rb
+# Event metadata is now always taken from the markdown file metadata
+EVENT = {
+  title: meta['biohackathon_name'],
+  URL:   meta['biohackathon_url'],
+  location: meta['biohackathon_location']
 }
-
-raise GenPdfError,"event undefined" if not event
-EVENT =
-  if event == :Other
-    { title: meta['biohackathon_name'],
-      URL:   meta['biohackathon_url'],
-      location: meta['biohackathon_location']
-    }
-  else
-    EVENT_TYPE[bioh.to_sym]
-  end
 
 # Plug things in that are not on command line
 

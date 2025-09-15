@@ -10,16 +10,14 @@ def md_parser fn
   yml
 end
 
-def meta_expand(header,event)
+def meta_expand(header)
   meta = header
   # p header
   # p header["biohackathon_name"]
   # p header[:biohackathon_name]
-  if event == :Other
-    raise MarkdownError,"biohackathon_name field is missing for 'Other'" if not header["biohackathon_name"]
-    raise MarkdownError,"biohackathon_url field is missing for 'Other'" if not header["biohackathon_url"]
-    raise MarkdownError,"biohackathon_location field is missing for 'Other'" if not header["biohackathon_location"]
-  end
+  raise MarkdownError,"biohackathon_name field is missing" if not header["biohackathon_name"]
+  raise MarkdownError,"biohackathon_url field is missing" if not header["biohackathon_url"]
+  raise MarkdownError,"biohackathon_location field is missing" if not header["biohackathon_location"]
   meta
 end
 

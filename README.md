@@ -90,18 +90,20 @@ Clone this git repository and install the prerequisites listed above
 
 Generate the PDF with
 
-    ./bin/gen-pdf [dir] [bioh]
+    ./bin/gen-pdf [--debug] [dir] [output.pdf] [git-url]
 
-where *dir* points to a directory where paper.md and paper.bib reside
-and *bioh* refers to the event. Example events (for a full list see ./bin/gen-pdf):
+where *dir* points to a directory where paper.md and paper.bib reside.
+The event information is now taken directly from the markdown metadata fields:
 
-    "Japan2019", "France2019", "Covid2020"
+- `biohackathon_name`: The name of the event (e.g., "NBDC/DBCLS BioHackathon")
+- `biohackathon_url`: The URL of the event (e.g., "http://2019.biohackathon.org/")
+- `biohackathon_location`: The location of the event (e.g., "Fukuoka, Japan, 2019")
 
 For example from the repository try
 
-    ./bin/gen-pdf example/logic/ "Covid2020"
+    ./bin/gen-pdf example/logic/
 
-which will currently generate the paper as *paper.pdf*.
+which will generate the paper as *paper.pdf*.
 
 # Run via Docker
 
@@ -139,12 +141,12 @@ If you are not using Docker or Guix you may need to explicitely add ruby
 
 ## Next generate default example
 
-    ruby ./bin/gen-pdf --debug ./example/logic Japan2019
+    ruby ./bin/gen-pdf --debug ./example/logic
     ls -l example/logic/paper.pdf
 
 and for debugging tex output:
 
-    ruby ./bin/gen-pdf --debug ./example/logic Japan2019 output.tex
+    ruby ./bin/gen-pdf --debug ./example/logic output.tex
     ls -l example/logic/output.tex
     cd example/logic
     lualatex output.tex
@@ -157,14 +159,14 @@ Note that the svg figure may complain. Just hit enter.
 Clone your repo in to a visible path and
 
     git clone my-repo.git
-    ruby ./bin/gen-pdf --debug my-repo-path/paper Japan2019
+    ruby ./bin/gen-pdf --debug my-repo-path/paper
 
 If you get pandoc errors, such as `Unknown option --citeproc` you'll need a plugin.
 Try the Guix container described above.
 
 That should generate a PDF. To generate the latex file add it to the command and try
 
-    ruby ./bin/gen-pdf --debug my-repo-path/paper Japan2019 output.tex
+    ruby ./bin/gen-pdf --debug my-repo-path/paper output.tex
 
 and now you can also debug the generated latex:
 
