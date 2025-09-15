@@ -43,6 +43,7 @@ event: Fukuoka2019
 biohackathon_name: "NBDC/DBCLS BioHackathon"
 biohackathon_url: "http://2019.biohackathon.org/"
 biohackathon_location: "Fukuoka, Japan, 2019"
+git_url: "https://github.com/biohackrxiv/bhxiv-gen-pdf"
 group: Logic programming group
 authors_short: Chris Mungall & Hirokazu Chiba \emph{et al.}
 ---

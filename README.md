@@ -90,14 +90,15 @@ Clone this git repository and install the prerequisites listed above
 
 Generate the PDF with
 
-    ./bin/gen-pdf [--debug] [dir] [output.pdf] [git-url]
+    ./bin/gen-pdf [--debug] [dir] [output.pdf]
 
 where *dir* points to a directory where paper.md and paper.bib reside.
-The event information is now taken directly from the markdown metadata fields:
+All metadata is now taken directly from the markdown file header and must include:
 
 - `biohackathon_name`: The name of the event (e.g., "NBDC/DBCLS BioHackathon")
 - `biohackathon_url`: The URL of the event (e.g., "http://2019.biohackathon.org/")
 - `biohackathon_location`: The location of the event (e.g., "Fukuoka, Japan, 2019")
+- `git_url`: The URL of the git repository containing the paper
 
 For example from the repository try
 

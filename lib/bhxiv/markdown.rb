@@ -18,6 +18,7 @@ def meta_expand(header)
   raise MarkdownError,"biohackathon_name field is missing" if not header["biohackathon_name"]
   raise MarkdownError,"biohackathon_url field is missing" if not header["biohackathon_url"]
   raise MarkdownError,"biohackathon_location field is missing" if not header["biohackathon_location"]
+  raise MarkdownError,"git_url field is missing" if not header["git_url"]
   meta
 end
 

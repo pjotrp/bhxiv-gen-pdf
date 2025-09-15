@@ -2,7 +2,7 @@
 #
 # Generate a PDF from markdown input (paper.md) in dir
 #
-# Usage:   gen-pdf [--debug] dir [paper.pdf] [git-url]
+# Usage:   gen-pdf [--debug] dir [paper.pdf]
 #
 # Example: ./bin/gen-pdf ./example/logic output.pdf
 #          ./bin/gen-pdf --debug ./example/logic output.tex
@@ -33,8 +33,6 @@ print "Scanning directory \"#{dir}\" for paper source\n"
 outfn=ARGV.shift
 outfn="paper.pdf" if not outfn
 
-git_url=ARGV.shift # optional URL passed in by web app
-
 $stderr.print("Generating #{outfn}\n")
 Dir.chdir(dir) do
   File.unlink(outfn) if File.exist?(outfn)
@@ -63,10 +61,10 @@ EVENT = {
   location: meta['biohackathon_location']
 }
 
-# Plug things in that are not on command line
+# Get git_url from metadata
 
-git_url = meta['git_url'] if not git_url and meta.has_key?('git_url')
-raise GenPdfError,"git_url is undefined in metadata - provide 'git_url' in the markdown header as a reference to the git repo if you are using a zip file" if not git_url
+git_url = meta['git_url']
+raise GenPdfError,"git_url is undefined in metadata - provide 'git_url' in the markdown header as a reference to the git repo" if not git_url
 
 JOURNAL='biohackrxiv'
 JOURNAL_NAME='BioHackrXiv.org'

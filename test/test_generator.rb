@@ -32,7 +32,7 @@ class TestGenerator < Minitest::Test
 
   def test_gen_pdf_url
     # note we can not use the --debug switch here
-    cmd = "ruby ./bin/gen-pdf ./example/logic/ paper_url.pdf https://github.com/biohackrxiv/bhxiv-gen-pdf"
+    cmd = "ruby ./bin/gen-pdf ./example/logic/ paper_url.pdf"
     print cmd,"\n"
     print `#{cmd}`
     status = $?.exitstatus
