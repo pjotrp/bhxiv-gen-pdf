@@ -21,39 +21,49 @@ require 'fileutils'
 require 'time'
 require 'bhxiv/markdown' # QC methods for YAML header
 
-p ARGV
+# p ARGV  # Debug line - uncomment if needed
 
-dir=ARGV.shift
+dir = ARGV.shift
 if dir == "--debug"
-  dir=ARGV.shift
+  dir = ARGV.shift
   is_debug = true
 end
-dir="." if not dir
+unless dir
+  $stderr.puts "Error: Directory argument is required"
+  $stderr.puts "Usage: gen-pdf [--debug] dir [output.pdf]"
+  exit(1)
+end
+
+unless File.directory?(dir)
+  $stderr.puts "Error: Directory '#{dir}' does not exist or is not a directory"
+  exit(1)
+end
+
 print "Scanning directory \"#{dir}\" for paper source\n"
 
-outfn=ARGV.shift
-outfn="paper.pdf" if not outfn
+outfn = ARGV.shift
+outfn = "paper.pdf" unless outfn
 
 $stderr.print("Generating #{outfn}\n")
 Dir.chdir(dir) do
   File.unlink(outfn) if File.exist?(outfn)
 end
 
-papermd = dir + "/" + "paper.md"
-raise "Can not find markdown file #{papermd}" if not File.exist?(papermd)
+papermd = File.join(dir, "paper.md")
+raise GenPdfError, "Cannot find markdown file #{papermd}" unless File.exist?(papermd)
 
 header = md_parser(papermd)
 meta = meta_expand(header)
 md_meta_checker(meta)
 
-paperbib = dir + "/" + "paper.bib"
-if not File.exist?(paperbib)
-  $stderr.print "WARNING: can not find bibtex file #{paperbib}\n"
-  print `touch #{paperbib}`
+paperbib = File.join(dir, "paper.bib")
+unless File.exist?(paperbib)
+  $stderr.puts "WARNING: Cannot find bibtex file #{paperbib}, creating empty file"
+  `touch #{paperbib}`
 end
 
-rootdir=File.expand_path(File.dirname(File.dirname(__FILE__)))
-resources=rootdir + "/resources/biohackrxiv"
+rootdir = File.expand_path(File.dirname(File.dirname(__FILE__)))
+resources = File.join(rootdir, "resources", "biohackrxiv")
 
 # Event metadata is now always taken from the markdown file metadata
 EVENT = {
@@ -65,22 +75,22 @@ EVENT = {
 # Get git_url from metadata
 
 git_url = meta['git_url']
-raise GenPdfError,"git_url is undefined in metadata - provide 'git_url' in the markdown header as a reference to the git repo" if not git_url
+raise GenPdfError, "git_url is undefined in metadata - provide 'git_url' in the markdown header as a reference to the git repo" unless git_url
 
-JOURNAL='biohackrxiv'
-JOURNAL_NAME='BioHackrXiv.org'
-JOURNAL_URL='https://biohackrxiv.org/'
-TEX=resources + "/latex.template"
-CSL=resources + "/apa-new.csl"
-EXTRACT_CITO=resources + "/filters/extract-cito.lua"
-INSERT_CITO=resources + "/filters/insert-cito-in-ref.lua"
-JOURNAL_LOGO=resources + "/logo.png"
+JOURNAL = 'biohackrxiv'
+JOURNAL_NAME = 'BioHackrXiv.org'
+JOURNAL_URL = 'https://biohackrxiv.org/'
+TEX = File.join(resources, "latex.template")
+CSL = File.join(resources, "apa-new.csl")
+EXTRACT_CITO = File.join(resources, "filters", "extract-cito.lua")
+INSERT_CITO = File.join(resources, "filters", "insert-cito-in-ref.lua")
+JOURNAL_LOGO = File.join(resources, "logo.png")
 
 time = Time.new
 date = time.strftime("%d %b %Y")
 
-cmd = <<COMMAND
-      #{ ( is_debug ? "--verbose" : "") }
+cmd = <<~COMMAND
+      #{is_debug ? "--verbose" : ""}
       -V journal_name='#{JOURNAL_NAME}'
       -V journal_url='#{JOURNAL_URL}'
       -V logo_path='#{JOURNAL_LOGO}'
@@ -96,7 +106,7 @@ cmd = <<COMMAND
       --no-check-certificate
       --csl=#{CSL}
       --lua-filter='#{EXTRACT_CITO}'
-      #{ ( paperbib ? "--citeproc" : "") }
+      #{paperbib ? "--citeproc" : ""}
       --lua-filter='#{INSERT_CITO}'
       -s
       --output='#{outfn}'
@@ -104,24 +114,24 @@ cmd = <<COMMAND
 COMMAND
 
 
-print cmd
-cmd2 = 'pandoc '+cmd.split(/\s*\n\s*/).join(" ")
+# Build pandoc command
+cmd2 = 'pandoc ' + cmd.split(/\s*\n\s*/).join(" ")
 
-print "Change into directory #{dir}\n"
+print "Changing to directory #{dir}\n"
 Dir.chdir(dir) do
-  print "Executing "
-  p cmd2
+  if is_debug
+    puts "Executing: #{cmd2}"
+  end
   print `#{cmd2}`
   if File.exist?(outfn)
-    print("Generated #{outfn}!\n")
+    puts "Generated #{outfn}!"
   else
-    # this is a bit odd, but when no path is supplied we need to get
-    # the local path
-    outfn2 = Dir.pwd+"/"+outfn
-    if File.exist?(outfn2)
-      print("Generated #{outfn}!\n")
+    # Check if file was created with absolute path
+    outfn_absolute = File.join(Dir.pwd, outfn)
+    if File.exist?(outfn_absolute)
+      puts "Generated #{outfn}!"
     else
-      print("Failed to generate #{outfn}!\n")
+      $stderr.puts "Failed to generate #{outfn}!"
       exit(2)
     end
   end
