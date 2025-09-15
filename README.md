@@ -90,9 +90,9 @@ Clone this git repository and install the prerequisites listed above
 
 Generate the PDF with
 
-    ./bin/gen-pdf [--debug] [dir] [output.pdf]
+    ./bin/gen-pdf [--debug] dir [output.pdf]
 
-where *dir* points to a directory where paper.md and paper.bib reside.
+where *dir* points to a directory where paper.md and paper.bib reside, and *output.pdf* is optional (defaults to "paper.pdf").
 All metadata is now taken directly from the markdown file header and must include:
 
 - `biohackathon_name`: The name of the event (e.g., "NBDC/DBCLS BioHackathon")
@@ -104,7 +104,11 @@ For example from the repository try
 
     ./bin/gen-pdf example/logic/
 
-which will generate the paper as *paper.pdf*.
+which will generate the paper as *paper.pdf* by default, or:
+
+    ./bin/gen-pdf example/logic/ my_paper.pdf
+
+to specify a custom output filename.
 
 # Run via Docker
 
@@ -142,7 +146,7 @@ If you are not using Docker or Guix you may need to explicitely add ruby
 
 ## Next generate default example
 
-    ruby ./bin/gen-pdf --debug ./example/logic
+    ruby ./bin/gen-pdf ./example/logic
     ls -l example/logic/paper.pdf
 
 and for debugging tex output:
@@ -160,7 +164,7 @@ Note that the svg figure may complain. Just hit enter.
 Clone your repo in to a visible path and
 
     git clone my-repo.git
-    ruby ./bin/gen-pdf --debug my-repo-path/paper
+    ruby ./bin/gen-pdf my-repo-path/paper
 
 If you get pandoc errors, such as `Unknown option --citeproc` you'll need a plugin.
 Try the Guix container described above.

@@ -2,9 +2,10 @@
 #
 # Generate a PDF from markdown input (paper.md) in dir
 #
-# Usage:   gen-pdf [--debug] dir [paper.pdf]
+# Usage:   gen-pdf [--debug] dir [output.pdf]
 #
-# Example: ./bin/gen-pdf ./example/logic output.pdf
+# Example: ./bin/gen-pdf ./example/logic
+#          ./bin/gen-pdf ./example/logic output.pdf
 #          ./bin/gen-pdf --debug ./example/logic output.tex
 #
 # Note that combining --debug with PDF output may lead to an error. See

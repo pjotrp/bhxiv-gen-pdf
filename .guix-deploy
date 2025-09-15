@@ -6,6 +6,6 @@
 
 
 echo Test with:
-echo ruby ./bin/gen-pdf --debug ./example/logic
+echo ruby ./bin/gen-pdf ./example/logic
 
 guix shell -C -N -F texlive ghc-pandoc ghc-citeproc ghc-pandoc-types librsvg ruby nss-certs openssl curl git less vim ruby-minitest
