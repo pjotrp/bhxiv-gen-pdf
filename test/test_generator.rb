@@ -14,7 +14,7 @@ class TestGenerator < Minitest::Test
   end
 
   def test_gen_1tex
-    cmd = "ruby ./bin/gen-pdf --debug ./example/logic/ Other paper.tex"
+    cmd = "ruby ./bin/gen-pdf --debug ./example/logic/ paper.tex"
     print cmd,"\n"
     print `#{cmd}`
     status = $?.exitstatus
@@ -23,7 +23,7 @@ class TestGenerator < Minitest::Test
 
   def test_gen_2pdf
     # note we can not use the --debug switch here
-    cmd = "ruby ./bin/gen-pdf ./example/logic/ Japan2019 paper.pdf"
+    cmd = "ruby ./bin/gen-pdf ./example/logic/ paper.pdf"
     print cmd,"\n"
     print `#{cmd}`
     status = $?.exitstatus
@@ -32,7 +32,7 @@ class TestGenerator < Minitest::Test
 
   def test_gen_pdf_url
     # note we can not use the --debug switch here
-    cmd = "ruby ./bin/gen-pdf ./example/logic/ Japan2019 paper_url.pdf https://github.com/biohackrxiv/bhxiv-gen-pdf"
+    cmd = "ruby ./bin/gen-pdf ./example/logic/ paper_url.pdf"
     print cmd,"\n"
     print `#{cmd}`
     status = $?.exitstatus
