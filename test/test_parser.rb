@@ -18,16 +18,16 @@ class TestParser < MiniTest::Test
   end
 
   def test_yaml_other_empty
-    header = md_parser('test/data/yaml1.md')
+    header = md_parser('test/data/incomplete.md')
     assert_raises MarkdownError do
-      meta = meta_expand(header,:Other)
+      meta = meta_expand(header)
     end
     # md_meta_checker(meta)
   end
 
   def test_yaml_other
     header = md_parser('test/data/other.md')
-    meta = meta_expand(header,:Other)
+    meta = meta_expand(header)
     # p meta
     md_meta_checker(meta)
     assert meta['biohackathon_name'] == "My biohackathon"

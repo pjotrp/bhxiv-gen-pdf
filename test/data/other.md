@@ -37,6 +37,7 @@ event: Other
 biohackathon_name: "My biohackathon"
 biohackathon_url: "https://nowhere.it"
 biohackathon_location: "In the middle of nowhere"
+git_url: "https://github.com/biohackrxiv/bhxiv-gen-pdf"
 group: Logic programming group
 authors_short: Chris Mungall & Hirokazu Chiba \emph{et al.}
 ---
