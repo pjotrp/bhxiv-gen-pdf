@@ -278,3 +278,8 @@ TSWLatexianTemp*
 # Makeindex log files
 *.lpz
 web-rb/tmp
+
+# ai-memory store: local working memory, not source.  Never commit it.
+*.sqlite
+*.sqlite-*
+*.sqlite.d/
