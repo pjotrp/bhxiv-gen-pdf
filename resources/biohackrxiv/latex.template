@@ -17,6 +17,9 @@
 \usepackage{ifxetex,ifluatex}
 \usepackage{seqsplit}
 \usepackage{xstring}
+% CJKutf8 is what lets resources/biohackrxiv/filters/cjk.lua typeset the CJK
+% runs of a paper; a paper without any is unaffected.
+\usepackage{CJKutf8}
 \usepackage[T1]{fontenc}
 \usepackage{lmodern}
 \usepackage{colortbl}
