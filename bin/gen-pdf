@@ -23,14 +23,31 @@ require 'bhxiv/markdown' # QC methods for YAML header
 
 # p ARGV  # Debug line - uncomment if needed
 
-dir = ARGV.shift
-if dir == "--debug"
-  dir = ARGV.shift
-  is_debug = true
+# Options come before the positional directory and output file.
+is_debug = false
+doi = nil
+while ARGV.first.to_s.start_with?("--")
+  option = ARGV.shift
+  case option
+  when "--debug"
+    is_debug = true
+  when "--doi"
+    doi = ARGV.shift
+    if doi.nil? || doi.empty?
+      $stderr.puts "Error: --doi needs a DOI, e.g. --doi 10.5281/zenodo.24463126"
+      exit(1)
+    end
+  else
+    $stderr.puts "Error: Unknown option #{option}"
+    $stderr.puts "Usage: gen-pdf [--debug] [--doi DOI] dir [output.pdf]"
+    exit(1)
+  end
 end
+
+dir = ARGV.shift
 unless dir
   $stderr.puts "Error: Directory argument is required"
-  $stderr.puts "Usage: gen-pdf [--debug] dir [output.pdf]"
+  $stderr.puts "Usage: gen-pdf [--debug] [--doi DOI] dir [output.pdf]"
   exit(1)
 end
 
@@ -54,6 +71,13 @@ raise GenPdfError, "Cannot find markdown file #{papermd}" unless File.exist?(pap
 
 header = md_parser(papermd)
 meta = meta_expand(header)
+
+# A DOI is allocated when a deposit is created, not when the paper is written,
+# so the caller passes it in; a paper.md that already carries one is honoured
+# for re-renders.  --doi wins over the header.
+doi ||= meta['doi'].to_s.strip unless meta['doi'].nil?
+doi = nil if doi && doi.empty?
+$stderr.print("DOI #{doi}\n") if doi
 md_meta_checker(meta)
 
 paperbib = File.join(dir, "paper.bib")
@@ -115,6 +139,7 @@ cmd = <<~COMMAND
       -V event_title='#{EVENT[:title]}'
       -V event_url='#{EVENT[:URL]}'
       -V event_location='#{EVENT[:location]}'
+      #{doi ? "-V doi='#{doi}'" : ""}
       -V geometry:margin=1in
       --from markdown+autolink_bare_uris
       --template '#{TEX}'

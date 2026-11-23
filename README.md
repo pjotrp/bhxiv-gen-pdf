@@ -90,10 +90,34 @@ Clone this git repository and install the prerequisites listed above
 
 Generate the PDF with
 
-    ./bin/gen-pdf [--debug] dir [output.pdf]
+    ./bin/gen-pdf [--debug] [--doi DOI] dir [output.pdf]
 
 where *dir* points to a directory where paper.md and paper.bib reside, and *output.pdf* is optional (defaults to "paper.pdf").
-All metadata is now taken directly from the markdown file header and must include:
+
+`--doi` prints a DOI in the paper's title block, under the submitted date:
+
+    ./bin/gen-pdf --doi 10.5281/zenodo.24466633 example/logic/ paper.pdf
+
+A deposit gets its DOI *before* the paper is rendered (Zenodo reserves one when
+a draft is created), which is why it is passed in rather than read from the
+paper. A paper.md that already carries a `doi:` field in its header is rendered
+with that one, for a re-render; `--doi` wins over the header. Without either, no
+DOI line appears and the output is unchanged.
+
+`gen-pdf` reports the pandoc it uses on stderr (`Using pandoc 3.7.0.2`). Both
+pandoc 2 and pandoc 3 work: the LaTeX template branches on the version, because
+pandoc 3 writes the reference list differently and wraps images in
+`\pandocbounded`. Two things it handles itself so that papers render without
+extra tooling:
+
+* SVG images are converted to PDF with `rsvg-convert` (pandoc 3 would otherwise
+  ask for the LaTeX `svg` package and Inkscape).
+* Runs of CJK characters are typeset through `CJKutf8` with the IPAex Mincho
+  font, so a paper can say "Fukuoka (福岡)" — pdflatex fails on those characters
+  without it. The glyphs are in the PDF but not in its text layer, which is a
+  property of the CJK Type 1 fonts.
+
+The rest of the metadata is now taken directly from the markdown file header and must include:
 
 - `biohackathon_name`: The name of the event (e.g., "NBDC/DBCLS BioHackathon")
 - `biohackathon_url`: The URL of the event (e.g., "http://2019.biohackathon.org/")
@@ -109,6 +133,15 @@ which will generate the paper as *paper.pdf* by default, or:
     ./bin/gen-pdf example/logic/ my_paper.pdf
 
 to specify a custom output filename.
+
+# Tests
+
+    ruby -I lib test/test_generator.rb     # renders example/logic to .tex and .pdf
+    ruby -I lib test/test_parser.rb        # header parsing
+
+They run against whichever `pandoc` and TeX are on PATH, which is how a pandoc
+upgrade is checked: `test_generator.rb` passing with pandoc 3 is what the
+migration was verified against.
 
 # Run via Docker
 
