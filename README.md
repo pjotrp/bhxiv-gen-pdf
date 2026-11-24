@@ -117,6 +117,15 @@ extra tooling:
   without it. The glyphs are in the PDF but not in its text layer, which is a
   property of the CJK Type 1 fonts.
 
+Output is reproducible: the same paper and the same DOI produce byte-identical
+PDFs on any day and in any directory, which is what lets a deposit gate decide by
+checksum whether anything changed.  `gen-pdf` takes the date from the header's
+`date:` field (and sets `SOURCE_DATE_EPOCH` for pdfTeX), the template suppresses
+the `/PTEX.*` entries that carry pandoc's temporary file names, and pdfTeX
+derives the trailer `/ID` from the content instead of the clock.  A renderer
+change still changes the checksum, so treat a PDF checksum as tying the bytes to
+a version of this tool as much as to the paper.
+
 The rest of the metadata is now taken directly from the markdown file header and must include:
 
 - `biohackathon_name`: The name of the event (e.g., "NBDC/DBCLS BioHackathon")

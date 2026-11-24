@@ -17,6 +17,19 @@
 \usepackage{ifxetex,ifluatex}
 \usepackage{seqsplit}
 \usepackage{xstring}
+% Reproducible output.  pdfTeX records the file name of every included image
+% (and its own page number) in a /PTEX.FileName entry, and derives the trailer
+% /ID partly from that; pandoc renders images through a temporary directory whose
+% name changes on every run, so the same paper would produce different bytes each
+% time and a checksum comparison would call every resubmit a change.
+% \pdfsuppressptexinfo keeps those entries out; with SOURCE_DATE_EPOCH set by
+% bin/gen-pdf the dates are fixed too.
+\ifdefined\pdfsuppressptexinfo\pdfsuppressptexinfo=15 \fi
+% The trailer /ID is stamped from the file name and the clock; an empty argument
+% makes pdfTeX derive it from the content instead, so the same paper gives the
+% same bytes on any day, in any directory.
+\ifdefined\pdftrailerid\pdftrailerid{} \fi
+
 % CJKutf8 is what lets resources/biohackrxiv/filters/cjk.lua typeset the CJK
 % runs of a paper; a paper without any is unaffected.
 \usepackage{CJKutf8}

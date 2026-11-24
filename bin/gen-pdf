@@ -17,6 +17,7 @@ end
 rootpath = File.dirname(File.dirname(__FILE__))
 $: << File.join(rootpath,'lib')
 
+require 'date'
 require 'fileutils'
 require 'time'
 require 'bhxiv/markdown' # QC methods for YAML header
@@ -125,8 +126,26 @@ SVG_TO_PDF = File.join(resources, "filters", "svg-to-pdf.lua")
 INSERT_CITO = File.join(resources, "filters", "insert-cito-in-ref.lua")
 JOURNAL_LOGO = File.join(resources, "logo.png")
 
+# Reproducible output.  pdfTeX stamps /CreationDate, /ModDate and a trailer /ID
+# from the clock unless SOURCE_DATE_EPOCH says otherwise, so two renders of the
+# same paper differ byte for byte -- and anything comparing PDFs by checksum
+# (the deposit gate in xiv-publish does) would call every resubmit a change.
+# The date the paper itself claims is the epoch: stable across days and machines,
+# and the date the title block already prints.
 time = Time.new
 date = time.strftime("%d %b %Y")
+if (claimed = meta['date'].to_s.strip) && !claimed.empty?
+  begin
+    parsed = Date.parse(claimed)
+    time = Time.utc(parsed.year, parsed.month, parsed.day)
+    date = time.strftime("%d %b %Y")
+  rescue ArgumentError
+    $stderr.puts "Warning: cannot parse the date #{claimed.inspect}; the PDF will " \
+                 "carry today's date and will not be reproducible"
+  end
+end
+ENV['SOURCE_DATE_EPOCH'] = time.to_i.to_s
+ENV['FORCE_SOURCE_DATE'] = '1'
 
 cmd = <<~COMMAND
       #{is_debug ? "--verbose" : ""}
